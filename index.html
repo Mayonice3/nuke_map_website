@@ -4,7 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Atomic Scales</title>
-        <!-- map viewer title -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
@@ -15,24 +16,63 @@
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
-    <body>
-        <section id="map_viewer" width="100vw" height="100vh"> <!--map viewer section with 2 parts --> 
-            <div id="map_window" width="75%" height="100%">  <!-- map window with only map -->
-                <div id="map"></div>
-            </div>
-            <div id="map_panel" width="25%" height="100%">
-                <div class="dropdown">
-                    <button onClick="dropDown()" class="dropbtn"> ! Select Explosive ! </button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <a href="#" onClick="selectExplosive('C4')">C4</a>
-                        <a href="#" onClick="selectExplosive('Dynamite')">Dynamite</a>
-                        <a href="#" onClick="selectExplosive('TNT')">TNT</a>
-                        <a href="#" onClick="selectExplosive('Little Boy')">Little Boy (Hiroshima)</a>
-                        <a href="#" onClick="selectExplosive('Fat Boy')">Fat Boy (Nagasaki)</a>
-                        <a href="#" onClick="selectExplosive('Fat Boy')">Tsar Bomba (Hydrogen Bomb)</a>
+    <body class="bg-red-600 dark:bg-black flex h-screen w-screen overflow-hidden">
+        <div class="flex flex-col w-full h-full">
+            <section id="header" class="w-full p-4 bg-black text-white text-left">
+                <h1 class="text-3xl tracking-widest font-bold">☢️ ATOMIC SCALES ☢️</h1>
+                <p class="text-sm italic">Visualizing the impact of explosives around the world</p>
+            </section>
+            <section id="map_viewer" class="flex flex-row h-full w-full"> <!--map viewer section with 2 parts --> 
+                <div id="map_window" class="basis-3/4">  <!-- map window with only map -->
+                    <div id="map" class="h-full w-full">
+                        <!--Leaflet JS tiles rendering-->
+                        <script>
+                            var map = L.map('map').setView([12.97, 77.59], 13);
+
+                            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            {
+                                maxZoom: 19,
+                                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                            }).addTo(map);
+
+                            var center = map.getCenter();
+                            
+                            var circle = L.circle(center, {
+                                color: 'red',
+                                fillColor: '#f03',
+                                fillOpacity: 0.5,
+                                radius: 500
+                            }).addTo(map);
+
+                        </script>
+                    </div>
                 </div>
-            </div>
-        </section>
+                <div id="map_panel" class="basis-1/4">
+                    <div id="dropdown" class="m-4 p-4 bg-white rounded-lg">
+                        <label for="explosives" class="block mb-2 text-md font-medium text-gray-900 dark:text-black">Select Explosive:</label>
+                        <select name="explosives" id="explosives" onChange="selectExplosive(this.value)">
+                            <optgroup label="Conventional">
+                                <option value="c4">C4</option>
+                                <option value="dynamite">Dynamite</option>
+                                <option value="tnt">TNT</option>
+                            </optgroup>
+                            <optgroup label="Nuclear">
+                            <option value="tsar_bomba">Tsar Bomba</option>
+                            <option value="little_boy">Little Boy</option>
+                            <option value="fat_man">Fat Man</option>
+                        </select>
+                    </div>
+                    <div id="info_panel" class="m-4 p-4 bg-yellow-400 rounded-lg">
+                        <h2 class="text-xl font-bold mb-2">Explosive Information</h2>
+                        <p id="explosive_name" class="text-lg font-semibold">Select an explosive</p>
+                        <p id="explosive_yield" class="text-md">Yield: N/A</p>
+                        <p id="explosive_description" class="text-sm mt-2">Description: N/A</p>
+                        <p id="death_toll" class="text-sm mt-2 text-red-600">Estimated Death Toll: N/A</p>
+                        <p id="radioactive_fallout" class="text-sm mt-2 text-green-800">Radioactive Fallout Radius: N/A</p>
+                        <p id="uninhabitable_radius" class="text-sm mt-2 text-purple-800">Uninhabitable Radius: N/A</p>
+                </div>
+            </section>
+        </div>
     <script src="main.js"></script>
     </body>
 </html>
